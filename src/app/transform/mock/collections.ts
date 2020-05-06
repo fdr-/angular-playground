@@ -17,28 +17,30 @@ const companyList = [
 ]
 
 const employeeList = [
-    {id: 0, name: 'Employee0', created: new Date(NOW - DAY * 2), company: null},
-    {id: 1, name: 'Employee1', created: new Date(NOW - DAY * 3), company: null},
-    {id: 2, name: 'Employee2', created: new Date(NOW), company: null},
-    {id: 3, name: 'Employee3', created: new Date(NOW), company: null},
-    {id: 4, name: 'Employee4', created: new Date(NOW - DAY), company: null},
-    {id: 5, name: 'Employee5', created: new Date(NOW - DAY * 2), company: null},
-    {id: 6, name: 'Employee6', created: new Date(NOW - WEEK * 2), company: null},
+    {id: 0, name: 'Employee0', lastname: 'Lastname0', created: new Date(NOW - DAY * 2), company: null},
+    {id: 1, name: 'Employee1', lastname: 'Lastname1', created: new Date(NOW - DAY * 3), company: null},
+    {id: 2, name: 'Employee2', lastname: 'Lastname2', created: new Date(NOW), company: null},
+    {id: 3, name: 'Employee3', lastname: 'Lastname3', created: new Date(NOW), company: null},
+    {id: 4, name: 'Employee4', lastname: 'Lastname4', created: new Date(NOW - DAY), company: null},
+    {id: 5, name: 'Employee5', lastname: 'Lastname5', created: new Date(NOW - DAY * 2), company: null},
+    {id: 6, name: 'Employee6', lastname: 'Lastname6', created: new Date(NOW - WEEK * 2), company: null},
 ];
 
-const relations = new Set([
-    {employee_id: 0, company_id: 0},
-    {employee_id: 1, company_id: 1},
-    // {employee_id: 2, company_id: 0},
-    {employee_id: 3, company_id: 0},
-    {employee_id: 4, company_id: 1},
-    {employee_id: 5, company_id: 1},
-    {employee_id: 6, company_id: 1},
+const employeeToCompanyRelations = new Map([
+    [0, 0],
+    [1, 1],
+    // no company for 3rd one, sad :'(
+    // [2, 0],
+    [3, 0],
+    [4, 1],
+    [5, 1],
+    [6, 1],
 ]);
 
-for (const rel of relations) {
-    employeeList[rel.employee_id].company = _omit(companyList[rel.company_id], 'employees');
-    companyList[rel.company_id].employees.push(_omit(employeeList[rel.employee_id], 'company'));
+// kek, class-transformer is not able to deal with recursion
+for (const [employee_id, company_id] of employeeToCompanyRelations) {
+    employeeList[employee_id].company = _omit(companyList[company_id], 'employees');
+    companyList[company_id].employees.push(_omit(employeeList[employee_id], 'company'));
 }
 
 export const companyCollection = new CompanyCollection(companyList.map((c) => CompanyModel.of(c)));

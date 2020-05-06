@@ -10,6 +10,7 @@ import {
 @Exclude()
 export class CompanyModel {
     @Expose()
+    @Transform((value: any) => value.toString(), {toClassOnly: true})
     id: string;
 
     @Expose()
