@@ -4,7 +4,6 @@ import { classToPlain, Exclude, Expose, plainToClass, Transform } from 'class-tr
 @Exclude()
 export class EmployeeModel {
     @Expose()
-    @Transform((value: any) => value.toString(), {toClassOnly: true})
     id: string;
 
     @Expose()
